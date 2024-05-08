@@ -2,7 +2,22 @@ const express = require('express')
 const morgan = require('morgan');
 const app = express()
 const cors = require('cors')
+const mongoose = require('mongoose')
+const password = process.argv[2]
 
+const url =
+  `mongodb+srv://Bayram:${password}@cluster0.fblymll.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`
+
+mongoose.set('strictQuery',false)
+
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+const Person = mongoose.model('Person', personSchema)
 
 
 morgan.token('postData', (req, res) => {
@@ -39,7 +54,9 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
     response.json(persons)
+  })
   })
 
 app.get('/info', (request, response) => {
