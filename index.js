@@ -9,6 +9,7 @@ morgan.token('postData', (req, res) => {
   return JSON.stringify(req.body);
 });
 
+app.use(express.static('dist'))
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'));
 app.use(cors())
@@ -103,4 +104,4 @@ app.post('/api/persons', (request, response) => {
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT)
-console.log(`Server running on port http://localhost:${PORT}/api/persons`)
+console.log(`Server running on port http://localhost:${PORT}`)
