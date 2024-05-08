@@ -15,20 +15,33 @@ const personSchema = new mongoose.Schema({
   number: String,
 })
 
+personSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+    }
+  })
+
 const Person = mongoose.model('Person', personSchema)
 
-const person = new Person({
-  name: name,
-  number: number,
-})
+if (name && number) {
+    const person = new Person({
+      name: name,
+      number: number,
+    })
 
-person.save().then(result => {
-    //console.log(`added ${person.name} number ${person.number} to phonebook`)
-    console.log('phonebook:')
-    Person.find({}).then(result => {
+    person.save().then(result => {
+      console.log(`added ${name} number ${number} to phonebook`)
+      console.log('phonebook:')
+      Person.find({}).then(result => {
         result.forEach(person => {
           console.log(`${person.name} ${person.number}`)
         })
         mongoose.connection.close()
       })
-})
+    })
+  } else {
+    console.log('The name or number is missing')
+    mongoose.connection.close()
+  }
