@@ -16,13 +16,7 @@ const personSchema = new mongoose.Schema({
     minlength: 3,
     required: true
   },
-  number: {
-    type: String,
-    validate: {
-      validator: validatePhoneNumber,
-      message: props => `${props.value} is not a valid phone number!`
-    }
-  }
+  number: String,
 })
 
 personSchema.set('toJSON', {
@@ -41,7 +35,7 @@ if (name && number) {
       number: number,
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
       console.log(`added ${name} number ${number} to phonebook`)
       console.log('phonebook:')
       Person.find({}).then(result => {
@@ -55,3 +49,6 @@ if (name && number) {
     console.log('The name or number is missing')
     mongoose.connection.close()
   }
+
+  module.exports = mongoose.model('Person', personSchema)
+

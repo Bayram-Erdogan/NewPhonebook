@@ -5,8 +5,9 @@ const app = express()
 const cors = require('cors')
 const Person = require('./models/person')
 
-morgan.token('postData', (req, res) => {
-  return JSON.stringify(req.body);
+
+morgan.token('postData', (request) => {
+  return JSON.stringify(request.body);
 });
 
 app.use(express.static('dist'))
@@ -15,12 +16,8 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 app.use(cors())
 
 
-let persons = []
-
 const validatePhoneNumber = (phoneNumber) => {
   const phoneNumberRegex = /^\d{2,3}-\d{5,}$/;
-
-
   return phoneNumberRegex.test(phoneNumber);
 }
 
@@ -112,7 +109,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })
